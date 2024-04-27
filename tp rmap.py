@@ -7,13 +7,14 @@ from tkinter import messagebox
 
 def get_map_data(place_name):
     graph = ox.graph_from_place(place_name, network_type='drive')
+    # print("First 100 node IDs in the graph:", list(graph.nodes())[:100])
     return graph
 
 def plot_graph(graph, node_color='b', node_size=0.1, node_alpha=0.6, edge_color='k', edge_linewidth=0.5, figsize=(15, 15)):
     fig, ax = ox.plot_graph(graph, node_color=node_color, node_size=node_size, node_alpha=node_alpha, edge_color=edge_color, edge_linewidth=edge_linewidth, figsize=figsize, show=False, close=False)
     plt.tight_layout()
     plt.axis('off')
-    plt.show()
+    plt.show(block=False)
 
 
 def a_star_search(graph, source, target):
@@ -25,7 +26,7 @@ def plot_shortest_path(graph, shortest_path):
     fig, ax = ox.plot_graph_route(graph, shortest_path, route_color='g', route_linewidth=3, node_size=0, figsize=(15, 15), show=False, close=False)
     plt.tight_layout()
     plt.axis('off')
-    plt.show()
+    plt.show(block=False)
 
 def main():
     
@@ -35,15 +36,11 @@ def main():
 
 
 
-    plot_graph(graph)
-    targa_university_node = entry_source.get()
-    center_city= entry_target.get()
+    # plot_graph(graph)
+    source = int(entry_source.get())
+    target = int(entry_target.get())
 
-    source = list(graph.nodes())[0]
-    target = list(graph.nodes())[23]
-
-
-    shortest_path = a_star_search(graph, 4129304918, 4129304920)
+    shortest_path = a_star_search(graph, source, target)
 
 
     plot_shortest_path(graph, shortest_path)
