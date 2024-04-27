@@ -9,8 +9,8 @@ def get_map_data(place_name):
     graph = ox.graph_from_place(place_name, network_type='drive')
     return graph
 
-def plot_graph(graph, node_color='b', node_size=0.1, node_alpha=0.6, edge_color='r', edge_linewidth=0.5, figsize=(15, 15)):
-    fig, ax = ox.plot_graph(graph, node_color=node_color, node_size=node_size, node_alpha=node_alpha,edge_color=edge_color, edge_linewidth=edge_linewidth, figsize=figsize, show=False, close=False)
+def plot_graph(graph, node_color='b', node_size=0.1, node_alpha=0.6, edge_color='k', edge_linewidth=0.5, figsize=(15, 15)):
+    fig, ax = ox.plot_graph(graph, node_color=node_color, node_size=node_size, node_alpha=node_alpha, edge_color=edge_color, edge_linewidth=edge_linewidth, figsize=figsize, show=False, close=False)
     plt.tight_layout()
     plt.axis('off')
     plt.show()
@@ -27,11 +27,12 @@ def plot_shortest_path(graph, shortest_path):
     plt.axis('off')
     plt.show()
 
-
 def main():
     
     place_name = "Bejaia, Algeria"
     graph = get_map_data(place_name)
+    #print(list(graph.nodes()))
+
 
 
     plot_graph(graph)
@@ -42,10 +43,12 @@ def main():
     target = list(graph.nodes())[23]
 
 
-    shortest_path = a_star_search(graph, targa_university_node, center_city)
+    shortest_path = a_star_search(graph, 4129304918, 4129304920)
 
 
     plot_shortest_path(graph, shortest_path)
+
+
 
 #if __name__ == "__main__":
 #    main()
