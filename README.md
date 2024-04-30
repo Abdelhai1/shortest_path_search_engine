@@ -13,7 +13,7 @@ This Python application helps users find the shortest path between two locations
 
 ## Usage
 
-1. Run the `shortest_path_finder.py` script to launch the application.
+1. Run the `App.py` script to launch the application.
 
 2. Select a city from the dropdown menu.
 
