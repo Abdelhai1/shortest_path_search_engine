@@ -5,23 +5,32 @@ import tkinter as tk
 from tkinter import ttk 
 from tkinter import messagebox
 
+graph = None
 
-def get_map_data(place_name):
+def get_map_data(city_name):
+    place_name = city_name + ", Algeria"  # Assuming Algeria for all cities
+    global graph
     graph = ox.graph_from_place(place_name, network_type='drive')
-    #print("First 100 node IDs in the graph:", list(graph.nodes())[:100])
     return graph
 
-def plot_graph(graph, node_color='b', node_size=0.1, node_alpha=0.6, edge_color='k', edge_linewidth=0.5, figsize=(15, 15)):
-    fig, ax = ox.plot_graph(graph, node_color=node_color, node_size=node_size, node_alpha=node_alpha, edge_color=edge_color, edge_linewidth=edge_linewidth, figsize=figsize, show=False, close=False)
-    plt.tight_layout()
-    plt.axis('off')
-    plt.show(block=False)
+def update_nodes(event=None):
+    selected_city = combobox_city.get()
+    graph = get_map_data(selected_city)
+    listbox_source.delete(0, tk.END)
+    listbox_target.delete(0, tk.END)
+    for node in get_node_names(graph):
+        listbox_source.insert(tk.END, node)
+        listbox_target.insert(tk.END, node)
 
+def get_node_names(graph):
+    node_names = {}
+    for node in graph.nodes():
+        node_names[node] = graph.nodes[node].get('name', f"Unnamed Node {node}")
+    return node_names
 
 def a_star_search(graph, source, target):
     path = nx.astar_path(graph, source, target, weight='length')
     return path
-
 
 def plot_shortest_path(graph, shortest_path):
     fig, ax = ox.plot_graph_route(graph, shortest_path, route_color='g', route_linewidth=3, node_size=0, figsize=(15, 15), show=False, close=False)
@@ -31,58 +40,64 @@ def plot_shortest_path(graph, shortest_path):
 
 def main():
     
-    place_name = "Bejaia, Algeria"
-    graph = get_map_data(place_name)
-    #print(list(graph.nodes()))
+    selected_source = listbox_source.get(tk.ACTIVE)
+    selected_target = listbox_target.get(tk.ACTIVE)
+    
+    if selected_source and selected_target:
+        shortest_path = a_star_search(graph, selected_source, selected_target)
+        plot_shortest_path(graph, shortest_path)
+    else:
+        messagebox.showwarning("Warning", "Please select both source and target nodes.")
 
-
-    # source_place = entry_source.get()
-    # target_place = entry_target.get()
-
-    # Geocode the place names to get the coordinates
-    # source_location = ox.geocode(source_place)
-    # target_location = ox.geocode(target_place)
-    # plot_graph(graph)
-    source = int(entry_source.get())
-    target = int(entry_target.get())
-
-    shortest_path = a_star_search(graph, source, target)
-
-
-    plot_shortest_path(graph, shortest_path)
-
-
-
-#if __name__ == "__main__":
-#    main()
-
+# Initialize Tkinter
 root = tk.Tk()
 root.title("Shortest Path Finder")
-root.geometry("300x150")  # Set the size of the window
-
-# Create a style
-style = ttk.Style(root)
-style.theme_use("clam")  # Use a modern theme
+root.geometry("400x400")
 
 # Create frames for better organization
 frame_input = ttk.Frame(root, padding="10")
-frame_input.pack(fill='x')
+frame_input.pack(fill='both', expand=True)
 
 frame_buttons = ttk.Frame(root, padding="10")
 frame_buttons.pack(fill='x')
 
 # Create and place the widgets
+label_city = ttk.Label(frame_input, text="Select City:")
+label_city.pack(side='left', padx=5, pady=5)
+
+cities = [
+    "Adrar", "Ain Defla", "Ain Temouchent", "Alger", "Annaba", "Batna",
+    "Bechar", "Bejaia", "Biskra", "Blida", "Bordj Bou Arreridj", "Bouira",
+    "Boumerdes", "Chlef", "Constantine", "Djelfa", "El Bayadh", "El Oued",
+    "El Tarf", "Ghardaia", "Guelma", "Illizi", "Jijel", "Khenchela",
+    "Laghouat", "Muaskar", "Medea", "Mila", "Mostaganem", "Msila", "Naama",
+    "Oran", "Ouargla", "Oum el Bouaghi", "Relizane", "Saida", "Setif", "Sidi Bel Abbes",
+    "Skikda", "Souk Ahras", "Tamanrasset", "Tebessa", "Tiaret", "Tindouf",
+    "Tipaza", "Tissemsilt", "Tizi Ouzou", "Tlemcen", "Adrar", "Ain Defla",
+    "Ain Temouchent", "Alger", "Annaba", "Batna", "Bechar", "Bejaia", "Biskra",
+    "Blida", "Bordj Bou Arreridj", "Bouira", "Boumerdes", "Chlef", "Constantine",
+    "Djelfa", "El Bayadh", "El Oued", "El Tarf", "Ghardaia", "Guelma", "Illizi",
+    "Jijel", "Khenchela", "Laghouat", "Muaskar", "Medea", "Mila", "Mostaganem",
+    "Msila", "Naama", "Oran", "Ouargla", "Oum el Bouaghi", "Relizane", "Saida",
+    "Setif", "Sidi Bel Abbes", "Skikda", "Souk Ahras", "Tamanrasset", "Tebessa",
+    "Tiaret", "Tindouf", "Tipaza", "Tissemsilt", "Tizi Ouzou", "Tlemcen"
+]
+
+combobox_city = ttk.Combobox(frame_input, values=cities)
+combobox_city.pack(side='left', padx=5, pady=5)
+combobox_city.bind("<<ComboboxSelected>>", update_nodes)
+
 label_source = ttk.Label(frame_input, text="Source Place:")
 label_source.pack(side='left', padx=5, pady=5)
 
-entry_source = ttk.Entry(frame_input)
-entry_source.pack(side='left', fill='x', expand=True, padx=5, pady=5)
+listbox_source = tk.Listbox(frame_input, selectmode="browse")
+listbox_source.pack(side='left', fill='both', expand=True, padx=5, pady=5)
 
 label_target = ttk.Label(frame_input, text="Destination Place:")
 label_target.pack(side='left', padx=5, pady=5)
 
-entry_target = ttk.Entry(frame_input)
-entry_target.pack(side='left', fill='x', expand=True, padx=5, pady=5)
+listbox_target = tk.Listbox(frame_input, selectmode="browse")
+listbox_target.pack(side='left', fill='both', expand=True, padx=5, pady=5)
 
 btn_find_path = ttk.Button(frame_buttons, text="Find Shortest Path", command=main)
 btn_find_path.pack(fill='x', padx=5, pady=5)
