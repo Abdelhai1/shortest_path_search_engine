@@ -15,9 +15,9 @@ This Python application helps users find the shortest path between two locations
 
 1. Run the `App.py` script to launch the application.
 
-2. Select a city from the dropdown menu.
+2. Select a city from the dropdown menu (you need to wait a few seconds until the places data is downloaded).
 
-3. Choose the source and destination places from the respective list boxes (you need to wait a few seconds until the places data is downloaded).
+3. Choose the source and destination places from the respective list boxes.
 
 4. Click on the "Find Shortest Path" button to calculate and display the shortest path between the selected locations.
 
