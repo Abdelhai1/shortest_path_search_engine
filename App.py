@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import tkinter as tk
 from tkinter import ttk 
 from tkinter import messagebox
-
+#initialization
 graph = None
 
 def get_map_data(city_name):
