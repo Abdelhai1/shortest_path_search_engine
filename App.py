@@ -65,6 +65,7 @@ frame_buttons.pack(fill='x')
 label_city = ttk.Label(frame_input, text="Select City:")
 label_city.pack(side='left', padx=5, pady=5)
 
+"wilayas"
 cities = [
     "Adrar", "Ain Defla", "Ain Temouchent", "Alger", "Annaba", "Batna",
     "Bechar", "Bejaia", "Biskra", "Blida", "Bordj Bou Arreridj", "Bouira",
